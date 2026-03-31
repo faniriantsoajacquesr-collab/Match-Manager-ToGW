@@ -19,3 +19,13 @@ export const calculateNewRatings = (ratingA: number, ratingB: number) => {
 
   return [newRatingA, newRatingB];
 };
+
+/**
+ * Prédit le gain de points pour le vainqueur
+ */
+export const predictMatchGain = (ratingWinner: number, ratingLoser: number) => {
+  const K = 32;
+  const expectedWinner = 1 / (1 + Math.pow(10, (ratingLoser - ratingWinner) / 400));
+  // Retourne le gain si ce joueur gagne (+X)
+  return Math.round(K * (1 - expectedWinner));
+};

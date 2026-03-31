@@ -1,6 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-
 const Classement: React.FC = () => {
   return (
     <div className="bg-surface-container-lowest text-on-surface font-body overflow-x-hidden min-h-screen">

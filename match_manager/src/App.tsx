@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 const App: React.FC = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
     <><p>hello world</p></>

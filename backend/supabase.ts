@@ -1,0 +1,8 @@
+// On importe createClient depuis le package installé via npm
+import { createClient } from '@supabase/supabase-js';
+
+// Initialize the Supabase client
+const SUPABASE_URL = 'https://hytcxleinmhbnwdqxybo.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh5dGN4bGVpbm1oYm53ZHF4eWJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NjkyNjUsImV4cCI6MjA5MDQ0NTI2NX0.uVl9RtyRremgP11mUVGRL1Lbk07ormL_3MtUZPa3kgQ';
+
+export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);

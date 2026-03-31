@@ -1,4 +1,20 @@
 // types/challonge.ts
+export const checkSync = async () => {
+  const slug = import.meta.env.VITE_CHALLONGE_SLUG;
+  const key = import.meta.env.VITE_CHALLONGE_API_KEY;
+  const url = `https://api.challonge.com/v1/tournaments/${slug}/participants.json?api_key=${key}`;
+  const res = await fetch(url);
+  const participants = await res.json();
+  
+  console.log(`Tournoi : ${slug}`);
+  console.log(`Joueurs synchronisés : ${participants.length}`);
+  
+  // Vérification du mapping avec Supabase
+  participants.forEach((p: any) => {
+    console.log(`Vérification de : ${p.participant.display_name}`);
+  });
+};
+
 export interface Match {
   id: number;
   state: 'open' | 'pending' | 'complete';
@@ -10,17 +26,26 @@ export interface Match {
 }
 
 // services/challonge.ts
-export const fetchTournamentData = async (tournamentSlug: string) => {
-  const apiKey = process.env.CHALLONGE_API_KEY;
-  
-  // On récupère les matchs ET les participants pour avoir les pseudos
+export const fetchTournamentData = async (_tournamentSlug: string) => {
+  // On appelle notre propre serveur Express pour éviter CORS
+  const API_BASE = "http://localhost:5000/api";
+
   const [matchesRes, participantsRes] = await Promise.all([
-    fetch(`https://api.challonge.com/v1/tournaments/${tournamentSlug}/matches.json?api_key=${apiKey}`),
-    fetch(`https://api.challonge.com/v1/tournaments/${tournamentSlug}/participants.json?api_key=${apiKey}`)
+    fetch(`${API_BASE}/matches`),
+    fetch(`${API_BASE}/participants`)
   ]);
+
+  if (!matchesRes.ok || !participantsRes.ok) {
+    throw new Error(`API Error: Matches(${matchesRes.status}) Participants(${participantsRes.status})`);
+  }
 
   const matches = await matchesRes.json();
   const participants = await participantsRes.json();
+
+  if (!Array.isArray(matches) || !Array.isArray(participants)) {
+    console.error("Expected arrays from API but got:", { matches, participants });
+    return { matches: [], participants: [] };
+  }
 
   return {
     matches: matches.map((m: any) => m.match),

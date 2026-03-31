@@ -1,29 +1,53 @@
 // hooks/useTournamentQueue.ts
-export const getTournamentQueue = (matches: Match[], participants: any[]) => {
-  // 1. Trouver le match en cours (si tu as cliqué sur "Start" dans Challonge)
-  const currentMatch = matches.find(m => m.underway_at !== null && m.state === 'open') 
-                       || matches.find(m => m.state === 'open');
+import { predictMatchGain } from './elo';
 
-  // 2. Filtrer les matchs prêts à être joués (exclure celui en cours)
-  const queue = matches
-    .filter(m => m.state === 'open' && m.id !== currentMatch?.id)
+export const getLiveQueue = async (matches: any[], participants: any[], supabase: any) => {
+  if (!matches || !participants) return { live: null, waiting: [] };
+
+  // 1. Trouver le match en cours (si tu as cliqué sur "Start" dans Challonge)
+  const openMatches = matches
+    .filter(m => m.state === 'open')
     .sort((a, b) => a.suggested_play_order - b.suggested_play_order);
 
-  // Fonction helper pour trouver le pseudo par ID
-  const getPlayer = (id: number) => participants.find(p => p.id === id)?.display_name || "TBD";
+  const currentMatch = openMatches.length > 0 ? openMatches[0] : null;
+  const queueMatches = openMatches.slice(1, 5); // Les 4 suivants
+
+  // 2. Récupérer tous les pseudos uniques pour le batch lookup Supabase
+  const getPlayerName = (id: number) => participants.find(p => p.id === id)?.display_name;
+  
+  // 3. Hydratation via Supabase
+  const { data: profiles } = await supabase
+    .from('players')
+    .select('username, elo_rating, main_character');
+
+  const hydratePlayer = (id: number) => {
+    if (!id) return { name: "TBD", elo: 1000, avatar: "default.webp", character: "TBD" };
+    const name = getPlayerName(id);
+    const profile = profiles?.find((p: any) => p.username === name);
+    return {
+      name: name || "TBD",
+      elo: profile?.elo_rating || 1000,
+      avatar: profile?.main_character || "default.webp",
+      character: profile?.main_character?.replace('.webp', '').toUpperCase() || "UNKNOWN"
+    };
+  };
+
+  const p1 = hydratePlayer(currentMatch?.player1_id);
+  const p2 = hydratePlayer(currentMatch?.player2_id);
 
   return {
-    live: {
+    live: currentMatch ? {
       matchId: currentMatch?.suggested_play_order,
-      p1: getPlayer(currentMatch?.player1_id!),
-      p2: getPlayer(currentMatch?.player2_id!),
-      score: currentMatch?.scores_csv || "0-0"
-    },
-    next: queue.slice(0, 2).map(m => ({
+      p1,
+      p2,
+      // Prédiction de hype
+      p1Gain: predictMatchGain(p1.elo, p2.elo),
+      p2Gain: predictMatchGain(p2.elo, p1.elo),
+    } : null,
+    waiting: queueMatches.map(m => ({
       matchNumber: m.suggested_play_order,
-      p1: getPlayer(m.player1_id),
-      p2: getPlayer(m.player2_id),
-      isLosers: m.suggested_play_order >= 6 // Exemple basé sur ta capture
+      p1: hydratePlayer(m.player1_id),
+      p2: hydratePlayer(m.player2_id)
     }))
   };
 };
