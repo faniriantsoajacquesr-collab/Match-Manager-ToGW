@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+@theme {
+  /* Standard ToGW Palette */
+  --color-primary: #81ecff;
+  --color-primary-dim: #00d4ec;
+  --color-primary-fixed: #00e3fd;
+  --color-primary-fixed-dim: #00d4ec;
+  --color-primary-container: #00e3fd;
+  --color-on-primary: #005762;
+  --color-on-primary-container: #004d57;
+  --color-on-primary-fixed: #003840;
+  --color-on-primary-fixed-variant: #005762;
+  
+  --color-secondary: #ff7346;
+  --color-secondary-dim: #ff7346;
+  --color-secondary-fixed: #ffc4b3;
+  --color-secondary-fixed-dim: #ffb199;
+  --color-secondary-container: #ae3200;
+  --color-on-secondary: #420d00;
+  --color-on-secondary-container: #fff6f3;
+  --color-on-secondary-fixed: #651900;
+  --color-on-secondary-fixed-variant: #962a00;
+
+  --color-tertiary: #c97cff;
+  --color-tertiary-dim: #aa30fa;
+  --color-tertiary-fixed: #d597ff;
+  --color-tertiary-fixed-dim: #cc84ff;
+  --color-tertiary-container: #ad34fd;
+  --color-on-tertiary: #350056;
+  --color-on-tertiary-container: #000000;
+  --color-on-tertiary-fixed: #290044;
+  --color-on-tertiary-fixed-variant: #5a008d;
+
+  --color-background: #0e0e0f;
+  --color-surface: #0e0e0f;
+  --color-surface-dim: #0e0e0f;
+  --color-surface-bright: #2c2c2d;
+  --color-surface-variant: #262627;
+  --color-surface-tint: #81ecff;
+  --color-surface-container: #1a191b;
+  --color-surface-container-low: #131314;
+  --color-surface-container-high: #201f21;
+  --color-surface-container-highest: #262627;
+  --color-surface-container-lowest: #000000;
+  
+  --color-on-background: #ffffff;
+  --color-on-surface: #ffffff;
+  --color-on-surface-variant: #adaaab;
+  --color-inverse-surface: #fcf8f9;
+  --color-inverse-on-surface: #565556;
+  --color-inverse-primary: #006976;
+
+  --color-error: #ff716c;
+  --color-error-dim: #d7383b;
+  --color-error-container: #9f0519;
+  --color-on-error: #490006;
+  --color-on-error-container: #ffa8a3;
+
+  --color-outline: #767576;
+  --color-outline-variant: #484849;
+
+  /* Event Fonts */
+  --font-headline: "Space Grotesk", sans-serif;
+  --font-body: "Manrope", sans-serif;
+  --font-label: "Inter", sans-serif;
+
+  /* Radii */
+  --radius-default: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-full: 9999px;
+
+  /* Animation pour le badge "Live" ou "Inscription Ouverte" */
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  --animate-pulse-soft: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Configuration de base */
+:root {
+  background-color: var(--color-background);
+  color: white;
+  font-family: var(--font-body);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* On garde tes variables existantes si elles sont utilisées par d'autres composants */
+:root {
+  --accent: var(--color-primary);
+  --accent-bg: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  --accent-border: var(--color-primary);
+  --border: rgba(255, 255, 255, 0.1);
+}
+
+/* Custom Utility Classes */
+.skew-heading { transform: skewX(-6deg); }
+.skew-card { transform: skewX(-3deg); }
+.no-skew { transform: skewX(3deg); }
+
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #000000; }
+::-webkit-scrollbar-thumb { 
+    background: var(--color-primary); 
+    border-radius: var(--radius-full);
+}
