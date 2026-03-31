@@ -5,12 +5,17 @@ interface QueueCardProps {
   character: string;
   elo: string;
   isOnDeck?: boolean;
+  matchRound: number;
 }
 
-export const QueueCard: React.FC<QueueCardProps> = ({ handle, character, elo, isOnDeck }) => {
+export const QueueCard: React.FC<QueueCardProps> = ({ handle, character, elo, isOnDeck, matchRound }) => {
   const containerClass = isOnDeck 
     ? "bg-surface-container-high border-secondary" 
     : "bg-surface-container-low border-white/10 opacity-70 hover:opacity-100";
+
+  const bracketType = matchRound > 0 
+    ? "WINNER'S BRACKET" 
+    : "LOSER'S BRACKET";
 
   return (
     <div className={`relative overflow-hidden group border-l-4 p-5 transition-all hover:bg-surface-bright ${containerClass}`}>
@@ -25,7 +30,9 @@ export const QueueCard: React.FC<QueueCardProps> = ({ handle, character, elo, is
         </div>
         <div>
           <p className="font-headline text-lg font-bold text-white uppercase leading-none">{handle}</p>
-          <p className={`font-label text-xs font-bold tracking-widest uppercase mt-1 ${isOnDeck ? 'text-secondary' : 'text-white/40'}`}>Character: {character}</p>
+          <p className={`font-label text-xs font-bold tracking-widest uppercase mt-1 ${isOnDeck ? 'text-secondary' : 'text-white/40'}`}>
+            {character} • {bracketType}
+          </p>
           <div className="flex items-center gap-2 mt-2">
             <span className="font-label text-[10px] text-white/40 uppercase">ELO</span>
             <span className="font-headline text-sm font-bold text-white">{elo}</span>

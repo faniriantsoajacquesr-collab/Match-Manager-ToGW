@@ -3,9 +3,11 @@ import { Link, NavLink } from 'react-router-dom';
 
 interface HeaderProps {
   onToggleSidebar: () => void;
+  onOpenSettings: () => void;
+  isAdmin: boolean;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
+export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, onOpenSettings, isAdmin }) => {
   return (
     <header className="fixed top-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-[#0e0e0f] border-b border-white/10">
       <div className="flex items-center gap-8">
@@ -44,6 +46,11 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
         </nav>
       </div>
       <div className="flex items-center gap-4">
+        {isAdmin && (
+          <button onClick={onOpenSettings} className="flex items-center gap-2 text-white/40 hover:text-primary transition-colors text-xs font-label uppercase">
+            <span className="material-symbols-outlined text-sm">settings</span>
+          </button>
+        )}
         <div className="flex items-center gap-2 px-4 py-1 bg-secondary text-on-secondary font-headline font-bold skew-heading">
           <span 
             className="material-symbols-outlined text-sm" 

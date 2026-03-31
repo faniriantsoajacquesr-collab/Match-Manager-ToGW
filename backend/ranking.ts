@@ -1,17 +1,20 @@
 // services/ranking.ts
-export const getGlobalRanking = async (supabase: any, tournamentParticipants: any[]) => {
+import { getRankTier } from './elo';
+
+export const getGlobalRanking = async (supabase: any) => {
   // 1. Récupérer les stats étendues (ELO, Character) dans Supabase
-  const { data: profiles, error } = await supabase
-    .from('profiles')
-    .select('username, elo_rating, main_character, wins, defeats')
+  const { data: players, error } = await supabase
+    .from('players')
+    .select('name, elo_rating, wins, losses, current_streak, avatar_url, main_character')
     .order('elo_rating', { ascending: false });
 
   if (error) return [];
 
-  // 2. Calculer le ratio et le rang
-  return profiles.map((profile, index) => ({
+  // 2. Mapper les données avec les Tiers
+  return players.map((player: any, index: number) => ({
     rank: index + 1,
-    ...profile,
-    ratio: Math.round((profile.wins / (profile.wins + profile.defeats || 1)) * 100)
+    ...player,
+    tier: getRankTier(player.elo_rating),
+    ratio: Math.round((player.wins / (player.wins + player.losses || 1)) * 100)
   }));
 };

@@ -1,6 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { supabase } from '../../../../backend/supabase';
+import { getGlobalRanking } from '../../../../backend/ranking';
 
 const Classement: React.FC = () => {
+  const [players, setPlayers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      // On récupère le classement global depuis la DB
+      const data = await getGlobalRanking(supabase);
+      setPlayers(data);
+      setLoading(false);
+    };
+    loadData();
+  }, []);
+
+  if (loading) return <div className="bg-black text-white p-20 h-screen font-headline italic text-3xl">LOADING RANKINGS...</div>;
+
   return (
     <div className="bg-surface-container-lowest text-on-surface font-body overflow-x-hidden min-h-screen">
       {/* Custom Styles Injection (Ideally moved to a global CSS file) */}
@@ -38,98 +55,108 @@ const Classement: React.FC = () => {
 
         {/* Top 3 Podium */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {/* Rank 2 */}
-          <div className="bg-surface-container-low p-6 border-l-4 border-[#C0C0C0] relative group hover:bg-surface-container-high transition-colors">
-            <div className="absolute -top-4 -right-4 text-6xl font-headline font-black text-white/5 italic">02</div>
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 rounded-full border-2 border-[#C0C0C0] p-1">
-                <img alt="VORTEX_KING" className="w-full h-full rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlL1T3VPL-MsY0wGbeojrx8HB7Q8qswuvZdW3OSZ4_iI3WyjtRKSgrMJGSYHMzLqhGRRETz6twji8AsK_7KFYw55sjUJqzhhUatJQ-4912usaz6ouH-vI2XXKO9FmKQao28bVrKahdO4yR-2TF6z64V8y6HT82duEpbfDhRuvzihvFutdQPS2yK72RDB8AKFNP4Ye1mpby1_tcd0DPXOfU8XKNN0Y11j4ZEJIftfFqCiAvSrodtZ_yJbAkGbQL5tRlBhguVUK_-rGv" />
-              </div>
-              <div>
-                <h4 className="font-headline font-bold text-xl text-white">VORTEX_KING</h4>
-                <span className="text-xs font-label uppercase text-white/50 tracking-widest">Silver Tier</span>
-              </div>
-            </div>
-            <div className="flex justify-between items-end">
-              <div>
-                <p className="text-[10px] font-label text-white/40 uppercase mb-1">Character</p>
-                <p className="font-headline font-bold text-[#C0C0C0] skew-heading italic">KAZUYA</p>
-              </div>
-              <div className="text-right">
-                <p className="text-[10px] font-label text-white/40 uppercase mb-1">ELO Rating</p>
-                <p className="text-2xl font-headline font-black text-white">2,845</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Rank 1 */}
-          <div className="bg-surface-container-highest p-8 border-l-4 border-primary relative overflow-hidden shadow-[0_0_30px_rgba(129,236,255,0.1)]">
-            <div className="absolute top-0 right-0 w-full h-full opacity-10">
-              <div className="w-full h-full bg-gradient-to-br from-primary to-transparent"></div>
-            </div>
-            <div className="absolute -top-4 -right-4 text-8xl font-headline font-black text-primary/10 italic">01</div>
-            <div className="relative z-10">
-              <div className="flex items-center gap-6 mb-8">
-                <div className="w-24 h-24 rounded-full border-4 border-primary p-1 shadow-[0_0_20px_rgba(129,236,255,0.3)]">
-                  <img alt="RAI JIN_X" className="w-full h-full rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGndle1JVUqdEYFNpZDaRlXRA1QpVNp5GAvAEDI0pI2bJ2U_TGa3nUvDM9VkJ1g7pnaqTzV750weBEiEoGwtt9szLBzkx231cgzLSveQZhD4EVd-rYlQNR3uEJN_aZZX99MKPiAdV260ebenHyjbgU4yRtXmsrQaKXNsiK0dnAANZ8SZgnN3RMiYzNRTVlNFLmu-N2ciydHq1uUIY_2xCl-BHvFqXWpSdCjlsXHlB_ibrRuKKRnww5ho0t9fl_6OiWY-359MUT3Olg" />
+          {/* Rank 2 - Silver */}
+          {players[1] && (
+            <div className="bg-surface-container-low p-6 border-l-4 border-[#C0C0C0] relative group hover:bg-surface-container-high transition-colors order-2 md:order-1">
+              <div className="absolute -top-4 -right-4 text-6xl font-headline font-black text-white/5 italic">02</div>
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 rounded-full border-2 border-[#C0C0C0] p-1 overflow-hidden">
+                  <img alt={players[1].name} className="w-full h-full rounded-full object-cover" src={`/assets/characters/${players[1].avatar_url}`} />
                 </div>
                 <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="material-symbols-outlined text-primary text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>stars</span>
-                    <span className="text-xs font-label uppercase text-primary tracking-[0.3em] font-bold">Grand Champion</span>
-                  </div>
-                  <h4 className="font-headline font-black text-3xl text-white italic skew-heading">RAI JIN_X</h4>
-                  <p className="text-sm font-body text-white/60">Team Void Runner</p>
+                  <h4 className="font-headline font-bold text-xl text-white">{players[1].name}</h4>
+                  <span className="text-xs font-label uppercase tracking-widest" style={{ color: players[1].tier.color }}>
+                    {players[1].tier.label}
+                  </span>
                 </div>
               </div>
               <div className="flex justify-between items-end">
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-[10px] font-label text-white/40 uppercase mb-1">Main Character</p>
-                    <p className="font-headline font-bold text-primary skew-heading text-xl">JIN KAZAMA</p>
-                  </div>
-                  <div className="flex gap-4">
-                    <div>
-                      <p className="text-[10px] font-label text-white/40 uppercase">Wins</p>
-                      <p className="text-lg font-headline font-bold text-white">142</p>
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-label text-white/40 uppercase">Ratio</p>
-                      <p className="text-lg font-headline font-bold text-secondary">94%</p>
-                    </div>
-                  </div>
+                <div>
+                  <p className="text-[10px] font-label text-white/40 uppercase mb-1">Character</p>
+                  <p className="font-headline font-bold text-[#C0C0C0] skew-heading italic">{players[1].main_character || 'UNKNOWN'}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-[10px] font-label text-white/40 uppercase mb-1">ELO Rating</p>
-                  <p className="text-5xl font-headline font-black text-white tracking-tighter">3,120</p>
+                  <p className="text-2xl font-headline font-black text-white">{players[1].elo_rating}</p>
                 </div>
               </div>
             </div>
-          </div>
+          )}
+
+          {/* Rank 1 */}
+          {players[0] && (
+            <div className="bg-surface-container-highest p-8 border-l-4 border-primary relative overflow-hidden shadow-[0_0_30px_rgba(129,236,255,0.1)] order-1 md:order-2">
+              <div className="absolute top-0 right-0 w-full h-full opacity-10">
+                <div className="w-full h-full bg-gradient-to-br from-primary to-transparent"></div>
+              </div>
+              <div className="absolute -top-4 -right-4 text-8xl font-headline font-black text-primary/10 italic">01</div>
+              <div className="relative z-10">
+                <div className="flex items-center gap-6 mb-8">
+                  <div className="w-24 h-24 rounded-full border-4 border-primary p-1 shadow-[0_0_20px_rgba(129,236,255,0.3)] overflow-hidden">
+                    <img alt={players[0].name} className="w-full h-full rounded-full object-cover" src={`/assets/characters/${players[0].avatar_url}`} />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="material-symbols-outlined text-primary text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>stars</span>
+                      <span className="text-xs font-label uppercase text-primary tracking-[0.3em] font-bold">Grand Champion</span>
+                    </div>
+                    <h4 className="font-headline font-black text-3xl text-white italic skew-heading">{players[0].name}</h4>
+                    <p className="text-sm font-body text-white/60">{players[0].tier.label}</p>
+                  </div>
+                </div>
+                <div className="flex justify-between items-end">
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-[10px] font-label text-white/40 uppercase mb-1">Main Character</p>
+                      <p className="font-headline font-bold text-primary skew-heading text-xl">{players[0].main_character || 'UNKNOWN'}</p>
+                    </div>
+                    <div className="flex gap-4">
+                      <div>
+                        <p className="text-[10px] font-label text-white/40 uppercase">Wins</p>
+                        <p className="text-lg font-headline font-bold text-white">{players[0].wins}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-label text-white/40 uppercase">Ratio</p>
+                        <p className="text-lg font-headline font-bold text-secondary">{players[0].ratio}%</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[10px] font-label text-white/40 uppercase mb-1">ELO Rating</p>
+                    <p className="text-5xl font-headline font-black text-white tracking-tighter">{players[0].elo_rating}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Rank 3 */}
-          <div className="bg-surface-container-low p-6 border-l-4 border-[#CD7F32] relative group hover:bg-surface-container-high transition-colors">
-            <div className="absolute -top-4 -right-4 text-6xl font-headline font-black text-white/5 italic">03</div>
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 rounded-full border-2 border-[#CD7F32] p-1">
-                <img alt="IRON_MAIDEN" className="w-full h-full rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAI3qygSU7aa9RaS9H2bQZ2SeVvF750BgFzEsPF5tADkyJm6RbNO1j025e-XesPKjq070wcdLA_mVxJPfGTkYVxO7KEpoPh9OfklrYG6v9NB2yJqFrsAdjznV-Vi1NeKNPTuJOMuNj03fHcHGMVY3ubGmiyxXS8n5MQSZAZoycEaXpo075EUeFXpM2rJXTf7ftkuMd7wHORG8tVkpfN4hMuQLwMh3G0kniSrk5GrIsY_Vjn6STJZTrKjpKv7hqs6iDSlGEQGFDSv_lq" />
+          {players[2] && (
+            <div className="bg-surface-container-low p-6 border-l-4 border-[#CD7F32] relative group hover:bg-surface-container-high transition-colors order-3">
+              <div className="absolute -top-4 -right-4 text-6xl font-headline font-black text-white/5 italic">03</div>
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 rounded-full border-2 border-[#CD7F32] p-1 overflow-hidden">
+                  <img alt={players[2].name} className="w-full h-full rounded-full object-cover" src={`/assets/characters/${players[2].avatar_url}`} />
+                </div>
+                <div>
+                  <h4 className="font-headline font-bold text-xl text-white">{players[2].name}</h4>
+                  <span className="text-xs font-label uppercase tracking-widest" style={{ color: players[2].tier.color }}>
+                    {players[2].tier.label}
+                  </span>
+                </div>
               </div>
-              <div>
-                <h4 className="font-headline font-bold text-xl text-white">IRON_MAIDEN</h4>
-                <span className="text-xs font-label uppercase text-white/50 tracking-widest">Bronze Tier</span>
+              <div className="flex justify-between items-end">
+                <div>
+                  <p className="text-[10px] font-label text-white/40 uppercase mb-1">Character</p>
+                  <p className="font-headline font-bold text-[#CD7F32] skew-heading italic">{players[2].main_character || 'UNKNOWN'}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[10px] font-label text-white/40 uppercase mb-1">ELO Rating</p>
+                  <p className="text-2xl font-headline font-black text-white">{players[2].elo_rating}</p>
+                </div>
               </div>
             </div>
-            <div className="flex justify-between items-end">
-              <div>
-                <p className="text-[10px] font-label text-white/40 uppercase mb-1">Character</p>
-                <p className="font-headline font-bold text-[#CD7F32] skew-heading italic">REINA</p>
-              </div>
-              <div className="text-right">
-                <p className="text-[10px] font-label text-white/40 uppercase mb-1">ELO Rating</p>
-                <p className="text-2xl font-headline font-black text-white">2,610</p>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
 
         {/* Leaderboard Table */}
@@ -162,30 +189,25 @@ const Classement: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {[
-                  { rank: '#04', name: 'SHADOW_WALKER', char: 'VICTOR', wins: 98, defeats: 42, elo: '2,450', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC6yNoChvwiyT1gGRLZENkuVmKbw3FKnw_-J_xjHqdOs0RwXkNarS8-4CzzKrV8415OiFRaNzmg70ZGmnf0sviHocTyvaF9JcRFWm0Ak0bwnpqCoeg9kmJXiJffa3ordR01VHwileWPDiJKixNn12BnTslFAnGl5tdD0vSnuHyGwE-7J0yTUlu20nFwuykjERKp6ZrYRqsP_hhVRXdKFd5yIH9qhRP3OhnzoGrFKhPmrY1WrSe9D3vDaOPrrZeruCBkUMy7vvUaIZZb' },
-                  { rank: '#05', name: 'DATA_MINER', char: 'ALISA', wins: 85, defeats: 31, elo: '2,390', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB-3GYYgkF2FxZvpMW_hPBnntdrMym92cT_uota3VXnhYqXpIQIJDj1bIXCG--4slUHrQIqWoTqNMUMjZIy8WUqfE0STD8z2hM0geUXZ1c5s1fIT87eA0CFUBRguTQsMo2ccM-sQYcqrpsK7OCbAD-fCqWjCbZFXNRpu5XKe00DuRjFhCU-nM4w7mOq-k8ypDuXrq8-IXom0_3ITl2wy_gf4U0NjnlVmR_vwwjDBo8ESDGSwK03KnU_Xexz6xoaRt06BAbosuW0fyDZ' },
-                  { rank: '#06', name: 'LUNA_STRIKE', char: 'AZUCENA', wins: 77, defeats: 24, elo: '2,215', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAOTY7peGeb2t2b-9i2ElPcAPWD334EpYhdY7SjG8GrFRtOF-N4ALEIU_B0u0dicN55aU5X3jTB4_BSVVgansBLa3xI7FLmJbTGy40xoFzG8GQxAbxx69gIOU6IMAPsrr_wi_s6fQeHd7cqgnyTcqx1ztzAtHWahcQ2e-x-4WpFKKI-nLarKQJLvRtbr5tCI8nWPw4Fv6nzw3-aXM4i80oPZ2KEaQPuJHaUw41SqE3av3cletyTiZS7KUCSsZxZnWR5b9jC-9M3fEbp' },
-                  { rank: '#07', name: 'ZENITH_FIGHTER', char: 'LARS', wins: 64, defeats: 19, elo: '2,180', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA2DQhx68n4_eFdj8sRD-cfsuXsfafV5jwn8sZDw7mjaPOpSmMVod5rwPe5HljP0aBUesShGssohz3qAJjYpEoTgmwblCybL_e9f3gjic-VPJ2c3TzufgIp4FjvbRJS2FWJIOwpfHoodC9xA04bjJ3DcRsHd95x2QNWV9S5R3BlsN3kJdtMVTpRLYPeKE2_hT1L6bfxrf1Md3ppUgBH-BdNaCovgab8vo-4xlaYmIkcqz41RWaJDtSK9LZ8LbUEp0tef0KduHc5Axab' },
-                ].map((player) => (
-                  <tr key={player.rank} className="hover:bg-white/[0.02] transition-colors group">
+                {players.slice(3).map((player) => (
+                  <tr key={player.rank} className="hover:bg-white/[0.02] transition-colors group border-b border-white/5">
                     <td className="px-6 py-5">
-                      <span className="font-headline font-bold text-white/50 italic">{player.rank}</span>
+                      <span className="font-headline font-bold text-white/50 italic">#{player.rank.toString().padStart(2, '0')}</span>
                     </td>
                     <td className="px-6 py-5">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-surface-container-high rounded-full overflow-hidden border border-white/10">
-                          <img alt={player.name} className="w-full h-full object-cover" src={player.img} />
+                          <img alt={player.name} className="w-full h-full object-cover" src={`/assets/characters/${player.avatar_url}`} />
                         </div>
                         <span className="font-headline font-bold text-white group-hover:text-primary transition-colors">{player.name}</span>
                       </div>
                     </td>
                     <td className="px-6 py-5">
-                      <span className="font-label text-xs uppercase text-white/60 px-2 py-1 bg-white/5 border border-white/10">{player.char}</span>
+                      <span className="font-label text-xs uppercase text-white/60 px-2 py-1 bg-white/5 border border-white/10">{player.main_character || 'N/A'}</span>
                     </td>
                     <td className="px-6 py-5 text-center font-headline font-bold text-white">{player.wins}</td>
-                    <td className="px-6 py-5 text-center font-headline font-bold text-error/60">{player.defeats}</td>
-                    <td className="px-6 py-5 text-right font-headline font-bold text-primary">{player.elo}</td>
+                    <td className="px-6 py-5 text-center font-headline font-bold text-error/60">{player.losses}</td>
+                    <td className="px-6 py-5 text-right font-headline font-bold text-primary">{player.elo_rating}</td>
                     <td className="px-6 py-5 text-right">
                       <button className="text-white/20 hover:text-white transition-colors">
                         <span className="material-symbols-outlined text-sm">more_vert</span>
@@ -196,50 +218,8 @@ const Classement: React.FC = () => {
               </tbody>
             </table>
           </div>
-          <div className="px-6 py-6 border-t border-white/5 flex justify-between items-center bg-surface-container-low">
-            <p className="text-[10px] font-label text-white/40 uppercase tracking-widest">Showing 7 of 1,240 players</p>
-            <div className="flex gap-2">
-              <button className="w-10 h-10 flex items-center justify-center bg-surface-container-high text-white hover:bg-primary hover:text-on-primary transition-all">
-                <span className="material-symbols-outlined text-sm">chevron_left</span>
-              </button>
-              <button className="w-10 h-10 flex items-center justify-center bg-primary text-on-primary font-headline font-bold">01</button>
-              <button className="w-10 h-10 flex items-center justify-center bg-surface-container-high text-white hover:bg-primary/20 transition-all">02</button>
-              <button className="w-10 h-10 flex items-center justify-center bg-surface-container-high text-white hover:bg-primary/20 transition-all">03</button>
-              <button className="w-10 h-10 flex items-center justify-center bg-surface-container-high text-white hover:bg-primary hover:text-on-primary transition-all">
-                <span className="material-symbols-outlined text-sm">chevron_right</span>
-              </button>
-            </div>
-          </div>
         </div>
 
-        {/* Hype Meter Section */}
-        <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="bg-surface-container p-6 border-b-4 border-tertiary">
-            <h3 className="font-headline font-bold text-white uppercase tracking-widest mb-6 flex items-center justify-between">
-              Global Hype Level <span className="text-tertiary text-xs">CRITICAL</span>
-            </h3>
-            <div className="relative h-4 bg-surface-container-lowest overflow-hidden mb-2">
-              <div className="absolute inset-y-0 left-0 bg-gradient-to-r from-surface-container-highest to-tertiary w-[88%] shadow-[0_0_15px_rgba(201,124,255,0.4)]"></div>
-            </div>
-            <div className="flex justify-between text-[10px] font-label text-white/40 uppercase tracking-tighter">
-              <span>Chill</span>
-              <span>Intense</span>
-              <span className="text-tertiary font-bold">Maximum Hype (88%)</span>
-            </div>
-          </div>
-          <div className="bg-surface-container p-6 border-b-4 border-secondary">
-            <h3 className="font-headline font-bold text-white uppercase tracking-widest mb-4">Latest Achievement</h3>
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-secondary/20 flex items-center justify-center border border-secondary/50">
-                <span className="material-symbols-outlined text-secondary" style={{ fontVariationSettings: "'FILL' 1" }}>workspace_premium</span>
-              </div>
-              <div>
-                <p className="font-headline font-bold text-white text-lg">PERFECT VICTORY</p>
-                <p className="text-xs font-body text-white/60">RAI JIN_X just completed a 10-win streak without losing a round.</p>
-              </div>
-            </div>
-          </div>
-        </div>
       </main>
 
       {/* BottomNavBar (Mobile Only) */}

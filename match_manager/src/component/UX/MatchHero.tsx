@@ -6,24 +6,32 @@ export interface Player {
   elo: number;
   avatar: string;
   character: string;
+  internalId: number | null; // ID Challonge pour l'API
+  wins: number;
+  losses: number;
+  streak: number;
 }
 
 export interface LiveMatch {
-  matchId: number | undefined;
+  id: number;
   p1: Player;
   p2: Player;
   p1Gain: number;
   p2Gain: number;
+  matchRound?: number; // Ajouté pour un affichage potentiel
 }
 
 interface MatchHeroProps {
   match: LiveMatch;
+  onWinner: (side: 'p1' | 'p2') => void;
+  winningSide: 'p1' | 'p2' | null;
+  isAdmin: boolean;
 }
 
 /**
  * MatchHero component displays the main duel between two players
  */
-export const MatchHero: React.FC<MatchHeroProps> = ({ match }) => {
+export const MatchHero: React.FC<MatchHeroProps> = ({ match, onWinner, winningSide, isAdmin }) => {
   return (
     <section className="relative grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-center gap-4 py-8">
       {/* Left side: Challenger */}
@@ -32,6 +40,10 @@ export const MatchHero: React.FC<MatchHeroProps> = ({ match }) => {
         role="CHALLENGER" 
         player={match.p1} 
         potentialGain={match.p1Gain} 
+        playerSide="p1"
+        winningSide={winningSide}
+        isAdmin={isAdmin}
+        onWin={() => onWinner('p1')}
       />
 
       {/* Central VS Divider */}
@@ -52,25 +64,37 @@ export const MatchHero: React.FC<MatchHeroProps> = ({ match }) => {
         role="DEFENDER" 
         player={match.p2} 
         potentialGain={match.p2Gain} 
+        playerSide="p2"
+        winningSide={winningSide}
+        isAdmin={isAdmin}
+        onWin={() => onWinner('p2')}
       />
     </section>
   );
 };
 
-const PlayerHeroCard = ({ side, role, player, potentialGain }: { 
+const PlayerHeroCard = ({ side, role, player, potentialGain, onWin, playerSide, winningSide, isAdmin }: { 
   side: 'left' | 'right', 
   role: string, 
   player: Player, 
-  potentialGain: number 
+  potentialGain: number;
+  onWin: () => void;
+  playerSide: 'p1' | 'p2';
+  winningSide: 'p1' | 'p2' | null;
+  isAdmin: boolean;
 }) => {
   const isLeft = side === 'left';
+  const isWinner = winningSide === playerSide;
   
   return (
-    <div className={`group relative overflow-hidden bg-surface-container h-[400px] ${isLeft ? 'text-left border-l-4 border-primary' : 'text-right border-r-4 border-secondary'}`}>
+    <div className={`group relative overflow-hidden bg-surface-container h-[400px] ${isLeft ? 'text-left border-l-4 border-primary' : 'text-right border-r-4 border-secondary'} ${isWinner ? 'animate-winner-glow' : ''}`}>
       <img 
         className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700" 
         src={`/assets/characters/${player.avatar}`} 
         alt={player.name} 
+        onError={(e) => {
+          (e.target as HTMLImageElement).src = '/assets/characters/default.webp';
+        }}
       />
       <div className={`absolute inset-0 bg-gradient-to-${isLeft ? 'r' : 'l'} from-surface-container-lowest via-transparent to-transparent`} />
       
@@ -79,13 +103,22 @@ const PlayerHeroCard = ({ side, role, player, potentialGain }: {
           <span className={`font-label text-xs ${isLeft ? 'text-primary' : 'text-secondary'} font-bold tracking-widest uppercase`}>
             {role} • +{potentialGain} PTS IF WIN
           </span>
-          <span className="font-headline text-xl text-white/60 uppercase block">
+          <span className="font-headline text-2xl text-primary/80 uppercase block mb-1">
             {player.character}
           </span>
-          <h2 className="font-headline text-5xl font-black text-white uppercase leading-none">
+          <h2 className="font-headline text-6xl font-black text-white uppercase leading-tight">
             {player.name}
           </h2>
         </div>
+        
+        {isAdmin && (
+            <button 
+                onClick={onWin}
+                className={`mt-4 px-6 py-2 border-2 ${isLeft ? 'border-primary text-primary hover:bg-primary' : 'border-secondary text-secondary hover:bg-secondary'} hover:text-white font-headline font-bold transition-all uppercase italic text-sm`}
+            >
+                SET AS WINNER?
+            </button>
+        )}
         
         <div className={isLeft ? '' : 'text-right'}>
           <p className="font-label text-sm text-white/60 uppercase tracking-widest">ELO Rating</p>

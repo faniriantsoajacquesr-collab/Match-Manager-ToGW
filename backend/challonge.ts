@@ -1,7 +1,5 @@
 // types/challonge.ts
-export const checkSync = async () => {
-  const slug = import.meta.env.VITE_CHALLONGE_SLUG;
-  const key = import.meta.env.VITE_CHALLONGE_API_KEY;
+export const checkSync = async (slug: string, key: string) => {
   const url = `https://api.challonge.com/v1/tournaments/${slug}/participants.json?api_key=${key}`;
   const res = await fetch(url);
   const participants = await res.json();
@@ -26,13 +24,17 @@ export interface Match {
 }
 
 // services/challonge.ts
-export const fetchTournamentData = async (_tournamentSlug: string) => {
+export const fetchTournamentData = async (slug: string, apiKey: string) => {
   // On appelle notre propre serveur Express pour éviter CORS
   const API_BASE = "http://localhost:5000/api";
+  const headers = {
+    'x-challonge-slug': slug,
+    'x-challonge-api': apiKey
+  };
 
   const [matchesRes, participantsRes] = await Promise.all([
-    fetch(`${API_BASE}/matches`),
-    fetch(`${API_BASE}/participants`)
+    fetch(`${API_BASE}/matches`, { headers }),
+    fetch(`${API_BASE}/participants`, { headers })
   ]);
 
   if (!matchesRes.ok || !participantsRes.ok) {

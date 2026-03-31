@@ -29,3 +29,14 @@ export const predictMatchGain = (ratingWinner: number, ratingLoser: number) => {
   // Retourne le gain si ce joueur gagne (+X)
   return Math.round(K * (1 - expectedWinner));
 };
+
+/**
+ * Détermine le Tier visuel en fonction de l'ELO
+ */
+export const getRankTier = (elo: number) => {
+  if (elo >= 1800) return { label: 'GOD OF DESTRUCTION', color: '#ff4d4d' };
+  if (elo >= 1500) return { label: 'PLATINUM', color: '#00d4ff' };
+  if (elo >= 1200) return { label: 'GOLD', color: '#ffd700' };
+  if (elo >= 1000) return { label: 'SILVER', color: '#c0c0c0' };
+  return { label: 'BRONZE', color: '#cd7f32' };
+};
