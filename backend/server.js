@@ -78,11 +78,3 @@ app.listen(PORT, () => console.log(`Serveur ToGW lancé sur le port ${PORT}`));
 
 const path = require('path');
 
-// On pointe vers le dossier de build de Vite
-const frontendPath = path.join(__dirname, '../match_manager/dist');
-app.use(express.static(frontendPath));
-
-// Pour toutes les autres routes (ex: /ranking, /login), on renvoie l'index.html
-app.get('*', (req, res) => {
-  res.sendFile(path.join(frontendPath, 'index.html'));
-});

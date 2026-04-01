@@ -12,6 +12,7 @@ export default function Match() {
     const [error, setError] = useState<string | null>(null);
     const [isAdmin, setIsAdmin] = useState(false);
     const [settings, setSettings] = useState<{slug: string, api: string} | null>(null);
+    const [channel, setChannel] = useState<any>(null);
 
     const refreshData = async () => {
         try {
@@ -46,6 +47,15 @@ export default function Match() {
 
         try {
             setWinningSide(side); // Déclenche l'animation de victoire
+
+            // Diffuser l'animation à tous les autres utilisateurs
+            if (channel) {
+                channel.send({
+                    type: 'broadcast',
+                    event: 'winner-declared',
+                    payload: { side },
+                });
+            }
 
             // 1. Signaler à Challonge (via notre proxy Express)
             const challongeRes = await fetch(`http://localhost:5000/api/matches/${match.id}`, {
@@ -104,9 +114,25 @@ export default function Match() {
         // Check admin status
         setIsAdmin(localStorage.getItem('isAdmin') === 'true');
 
+        // Configuration du canal temps réel pour les animations
+        const matchChannel = supabase.channel('tournament-live');
+
+        matchChannel
+            .on('broadcast', { event: 'winner-declared' }, (payload) => {
+                // Cette partie s'exécute chez tous les clients (sauf l'envoyeur par défaut)
+                setWinningSide(payload.payload.side);
+                setTimeout(() => setWinningSide(null), 5000);
+            })
+            .subscribe();
+
+        setChannel(matchChannel);
+
         // Polling toutes les 10 secondes
         const interval = setInterval(refreshData, 10000);
-        return () => clearInterval(interval);
+        return () => {
+            clearInterval(interval);
+            supabase.removeChannel(matchChannel);
+        };
     }, []);
 
     if (error) return <div className="text-error p-20 bg-black h-screen">Error: {error}</div>;
