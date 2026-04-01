@@ -11,7 +11,7 @@ export default function Login() {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         // On cherche l'utilisateur dans la table 'users'
-        const { data, error } = await supabase
+        const { data } = await supabase
             .from('users')
             .select('*')
             .eq('username', username)

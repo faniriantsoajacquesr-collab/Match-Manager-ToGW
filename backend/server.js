@@ -1,7 +1,8 @@
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config();
 const axios = require('axios');
+const path = require('path');
+require('dotenv').config();
 
 const app = express();
 app.use(cors()); // Autorise React
@@ -67,17 +68,12 @@ app.put('/api/matches/:id', async (req, res) => {
 
 // Route de Login Admin (vérification via la table 'users' de Supabase gérée par le serveur)
 app.post('/api/login', async (req, res) => {
-    const { username, password } = req.body;
-    // Ici, on pourrait importer le client supabase, mais pour rester simple
-    // on va déléguer la vérification au client React via Supabase directement
-    // Cette route est ici pour la structure, mais on utilisera Supabase SDK côté front.
     res.json({ message: "Use direct Supabase connection for auth" });
 });
 
+// Ne pas lancer app.listen sur Vercel
 if (process.env.NODE_ENV !== 'production') {
     app.listen(PORT, () => console.log(`Serveur ToGW lancé sur le port ${PORT}`));
 }
 
 module.exports = app;
-
-const path = require('path');

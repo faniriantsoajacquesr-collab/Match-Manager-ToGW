@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../../../../backend/supabase';
 
 export const SettingsSidebar = ({ isOpen, onClose, settings }: { isOpen: boolean, onClose: () => void, settings: any }) => {

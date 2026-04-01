@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { RealtimeChannel } from '@supabase/supabase-js';
 import { MatchHero } from '../UX/MatchHero';
 import { QueueCard } from '../UX/QueueCard';
 import { fetchTournamentData } from '../../../../backend/challonge';
@@ -12,7 +13,7 @@ export default function Match() {
     const [error, setError] = useState<string | null>(null);
     const [isAdmin, setIsAdmin] = useState(false);
     const [settings, setSettings] = useState<{slug: string, api: string} | null>(null);
-    const [channel, setChannel] = useState<any>(null);
+    const [channel, setChannel] = useState<RealtimeChannel | null>(null);
 
     const refreshData = async () => {
         try {
@@ -50,7 +51,7 @@ export default function Match() {
 
             // Diffuser l'animation à tous les autres utilisateurs
             if (channel) {
-                channel.send({
+                await channel.send({
                     type: 'broadcast',
                     event: 'winner-declared',
                     payload: { side },
@@ -58,7 +59,6 @@ export default function Match() {
             }
 
             // 1. Signaler à Challonge (via notre proxy Express)
-        // En production sur Vercel, l'API est sur le même domaine
         const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:5000' : '';
         
         const challongeRes = await fetch(`${API_BASE}/api/matches/${match.id}`, {
@@ -123,7 +123,7 @@ export default function Match() {
         matchChannel
             .on('broadcast', { event: 'winner-declared' }, (payload) => {
                 // Cette partie s'exécute chez tous les clients (sauf l'envoyeur par défaut)
-                setWinningSide(payload.payload.side);
+                setWinningSide(payload.payload?.side);
                 setTimeout(() => setWinningSide(null), 5000);
             })
             .subscribe();

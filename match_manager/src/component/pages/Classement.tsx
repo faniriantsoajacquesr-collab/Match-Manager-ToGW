@@ -1,5 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { supabase } from '../../../../backend/supabase';
+
 const Classement: React.FC = () => {
+  const [players, setPlayers] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      const { data } = await supabase
+        .from('players')
+        .select('*')
+        .order('elo_rating', { ascending: false });
+      if (data) setPlayers(data);
+    };
+    fetchPlayers();
+  }, []);
+
   return (
     <div className="bg-surface-container-lowest text-on-surface font-body overflow-x-hidden min-h-screen">
       {/* Custom Styles Injection (Ideally moved to a global CSS file) */}
@@ -170,7 +185,7 @@ const Classement: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {players.slice(3).map((player) => (
+                {players.slice(3).map((player: any) => (
                   <tr key={player.rank} className="hover:bg-white/[0.02] transition-colors group border-b border-white/5">
                     <td className="px-6 py-5">
                       <span className="font-headline font-bold text-white/50 italic">#{player.rank.toString().padStart(2, '0')}</span>
