@@ -58,7 +58,10 @@ export default function Match() {
             }
 
             // 1. Signaler à Challonge (via notre proxy Express)
-            const challongeRes = await fetch(`http://localhost:5000/api/matches/${match.id}`, {
+        // En production sur Vercel, l'API est sur le même domaine
+        const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:5000' : '';
+        
+        const challongeRes = await fetch(`${API_BASE}/api/matches/${match.id}`, {
                 method: 'PUT',
                 headers: { 
                     'Content-Type': 'application/json',

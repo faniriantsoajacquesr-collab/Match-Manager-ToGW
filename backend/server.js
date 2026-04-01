@@ -74,7 +74,10 @@ app.post('/api/login', async (req, res) => {
     res.json({ message: "Use direct Supabase connection for auth" });
 });
 
-app.listen(PORT, () => console.log(`Serveur ToGW lancé sur le port ${PORT}`));
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => console.log(`Serveur ToGW lancé sur le port ${PORT}`));
+}
+
+module.exports = app;
 
 const path = require('path');
-
