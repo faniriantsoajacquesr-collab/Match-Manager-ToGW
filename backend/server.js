@@ -28,7 +28,8 @@ app.get('/api/matches', async (req, res) => {
     res.json(response.data);
   } catch (error) {
     console.error("Challonge Matches Error:", error.response?.data || error.message);
-    res.status(500).json({ error: "Erreur Challonge Matches" });
+    const status = error.response?.status || 500;
+    res.status(status).json({ error: error.response?.data || error.message });
   }
 });
 
@@ -44,7 +45,8 @@ app.get('/api/participants', async (req, res) => {
     res.json(response.data);
   } catch (error) {
     console.error("Challonge Participants Error:", error.response?.data || error.message);
-    res.status(500).json({ error: "Erreur Challonge Participants" });
+    const status = error.response?.status || 500;
+    res.status(status).json({ error: error.response?.data || error.message });
   }
 });
 

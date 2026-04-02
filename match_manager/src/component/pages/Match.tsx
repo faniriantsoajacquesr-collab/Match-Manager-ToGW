@@ -7,6 +7,10 @@ import { getLiveQueue } from '../../../../backend/useTournamentQueue';
 import { supabase } from '../../../../backend/supabase'
 import { calculateNewRatings } from '../../../../backend/elo';
 
+// Détermine l'URL de l'API : relative en production (Vercel), absolue en local
+const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const API_BASE = isLocal ? 'http://localhost:5000' : '';
+
 export default function Match() {
     const [tournamentData, setTournamentData] = useState<any>(null);
     const [winningSide, setWinningSide] = useState<'p1' | 'p2' | null>(null);
@@ -59,8 +63,6 @@ export default function Match() {
             }
 
             // 1. Signaler à Challonge (via notre proxy Express)
-        const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:5000' : '';
-        
         const challongeRes = await fetch(`${API_BASE}/api/matches/${match.id}`, {
                 method: 'PUT',
                 headers: { 
