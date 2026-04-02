@@ -13,7 +13,15 @@
   ],
   "rewrites": [
     { "source": "/api/(.*)", "destination": "backend/server.js" },
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    {
+      "source": "/assets/(.*)",
+      "destination": "/match_manager/assets/$1"
+    },
+    {
+      "source": "/vite.svg",
+      "destination": "/match_manager/vite.svg"
+    },
+    { "source": "/((?!api/).*)", "destination": "/match_manager/index.html" }
   ]
 }
    
