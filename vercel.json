@@ -12,7 +12,15 @@
     }
   ],
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "backend/server.js" },
-    { "source": "/(.*)", "destination": "match_manager/$1" }
-  ]
+    { 
+      "source": "/api/(.*)", 
+      "destination": "backend/server.js" 
+    },
+    { 
+      "source": "/((?!api/).*)", 
+      "destination": "/index.html" 
+    }
+  ],
+  "cleanUrls": true,
+  "trailingSlash": false
 }
