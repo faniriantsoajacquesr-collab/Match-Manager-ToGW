@@ -26,7 +26,10 @@ export interface Match {
 // services/challonge.ts
 export const fetchTournamentData = async (slug: string, apiKey: string) => {
   // On appelle notre propre serveur Express pour éviter CORS
-  const API_BASE = "http://localhost:5000/api";
+  // En production (Vercel), on utilise un chemin relatif pour passer par le proxy
+  const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  const API_BASE = isLocal ? "http://localhost:5000/api" : "/api";
+
   const headers = {
     'x-challonge-slug': slug,
     'x-challonge-api': apiKey
