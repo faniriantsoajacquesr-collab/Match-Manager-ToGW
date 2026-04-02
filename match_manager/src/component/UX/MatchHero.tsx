@@ -106,7 +106,7 @@ const PlayerHeroCard = ({ side, role, player, potentialGain, onWin, playerSide, 
           <span className="font-headline text-2xl text-primary/80 uppercase block mb-1">
             {player.character}
           </span>
-          <h2 className="font-headline text-6xl font-black text-white uppercase leading-tight">
+          <h2 className="font-headline text-4xl font-black text-white uppercase leading-tight">
             {player.name}
           </h2>
         </div>

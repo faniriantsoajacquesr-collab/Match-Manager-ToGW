@@ -19,7 +19,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, onOpenSettings,
         <button onClick={onToggleSidebar} className="flex md:hidden text-white hover:text-primary transition-colors">
           <span className="material-symbols-outlined">menu</span>
         </button>
-        <Link to="/" className=" text-xl  lg:text-2xl  font-black italic tracking-tighter text-[#00E5FF] font-headline skew-heading no-underline">
+        <Link to="/" className=" text-sm lg:text-lg  font-black italic tracking-tighter text-[#00E5FF] font-headline skew-heading no-underline">
           TOLIARA GAMES WEEK
         </Link>
         <nav className="hidden md:flex gap-6 items-center h-full">
@@ -40,14 +40,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, onOpenSettings,
               }`
             }
           >RANKING</NavLink>
-          <NavLink 
-            to="/bracket" 
-            className={({ isActive }) => 
-              `font-label text-sm uppercase tracking-wider transition-colors ${
-                isActive ? 'text-[#00E5FF] border-b-2 border-[#00E5FF] pb-1 font-bold' : 'text-white/70 hover:text-white'
-              }`
-            }
-          >EVENT INFO</NavLink>
+          
         </nav>
       </div>
       <div className="flex items-center gap-4">
@@ -61,6 +54,12 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, onOpenSettings,
             <span className="material-symbols-outlined text-sm">logout</span>
             Disconnect
           </button>
+        )}
+        {isAdmin && (
+          <Link to="/overlay" target="_blank" className="flex items-center gap-2 text-white/40 hover:text-primary transition-colors text-xs font-label uppercase">
+            <span className="material-symbols-outlined text-sm">layers</span>
+            Overlay
+          </Link>
         )}
         {isAdmin && (
           <button onClick={onOpenSettings} className="flex items-center gap-2 text-white/40 hover:text-primary transition-colors text-xs font-label uppercase">

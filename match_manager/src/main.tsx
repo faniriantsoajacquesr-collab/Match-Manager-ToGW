@@ -8,6 +8,7 @@ import Layout from './component/UX/Layout'
 import Match from './component/pages/Match'
 import Ranking from './component/pages/Ranking'
 import Login from './component/pages/Login'
+import Scoreboard from './component/pages/ScoreOverlay'
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />, // Le Login est ici, en dehors du Layout
+  },
+  {
+    path: "/overlay",
+    element: <Scoreboard />, // Le Login est ici, en dehors du Layout
   },
 ]);
 

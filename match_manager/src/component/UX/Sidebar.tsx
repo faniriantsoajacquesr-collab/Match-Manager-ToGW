@@ -54,18 +54,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             <span className="material-symbols-outlined">leaderboard</span>
             <span className="font-label text-sm uppercase tracking-wider">Leaderboard</span>
           </NavLink>
-          <NavLink 
-            onClick={onClose}
-            to="/info"
-            className={({ isActive }) => 
-              `flex items-center gap-3 px-4 py-3 transition-all duration-300 ${
-                isActive ? 'bg-[#131314] text-[#00E5FF] border-l-4 border-[#ff7346] font-bold' : 'text-white/60 hover:bg-[#131314] hover:text-white'
-              }`
-            }
-          >
-            <span className="material-symbols-outlined">info</span>
-            <span className="font-label text-sm uppercase tracking-wider">Event Info</span>
-          </NavLink>
+         
         </nav>
       </div>
     </aside>

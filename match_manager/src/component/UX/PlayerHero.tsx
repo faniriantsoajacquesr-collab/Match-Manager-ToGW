@@ -27,7 +27,7 @@ export const PlayerHero: React.FC<PlayerHeroProps> = ({ name, handle, elo, image
       <div className={`absolute bottom-0 ${isLeft ? 'left-0' : 'right-0'} p-8 w-full`}>
         <div className="flex flex-col gap-1 mb-4">
           <span className={`font-label text-xs ${roleColor} font-bold tracking-widest uppercase`}>{role}</span>
-          <h2 className="font-headline text-5]xl font-black  text-white uppercase leading-none">{name}</h2>
+          <h2 className="font-headline text-3xl font-black  text-white uppercase leading-none">{name}</h2>
         </div>
         <div className={`flex items-end justify-between ${!isLeft ? 'flex-row-reverse' : ''}`}>
           <div>
