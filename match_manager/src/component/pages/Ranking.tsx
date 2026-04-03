@@ -221,26 +221,6 @@ const Classement: React.FC = () => {
         </div>
 
       </main>
-
-      {/* BottomNavBar (Mobile Only) */}
-      <nav className="md:hidden fixed bottom-0 left-0 w-full h-16 bg-[#0e0e0f] border-t border-white/10 flex justify-around items-center z-50">
-        <button className="flex flex-col items-center gap-1 text-white/50">
-          <span className="material-symbols-outlined text-xl">sports_esports</span>
-          <span className="text-[9px] font-label uppercase">Match</span>
-        </button>
-        <button className="flex flex-col items-center gap-1 text-[#00E5FF]">
-          <span className="material-symbols-outlined text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>leaderboard</span>
-          <span className="text-[9px] font-label uppercase font-bold">Rank</span>
-        </button>
-        <button className="flex flex-col items-center gap-1 text-white/50">
-          <span className="material-symbols-outlined text-xl">account_tree</span>
-          <span className="text-[9px] font-label uppercase">Bracket</span>
-        </button>
-        <button className="flex flex-col items-center gap-1 text-white/50">
-          <span className="material-symbols-outlined text-xl">live_tv</span>
-          <span className="text-[9px] font-label uppercase">Stream</span>
-        </button>
-      </nav>
     </div>
   );
 };

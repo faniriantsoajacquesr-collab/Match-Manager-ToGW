@@ -9,6 +9,7 @@ import Match from './component/pages/Match'
 import Ranking from './component/pages/Ranking'
 import Login from './component/pages/Login'
 import Scoreboard from './component/pages/ScoreOverlay'
+import EventInfo from './component/pages/EventInfo'
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: "ranking",
         element: <Ranking />,
+      },
+      {
+        path: "eventinfo",
+        element: <EventInfo />,
       },
     ],
   },

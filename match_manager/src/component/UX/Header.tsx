@@ -40,7 +40,22 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, onOpenSettings,
               }`
             }
           >RANKING</NavLink>
-          
+          <NavLink 
+            to="/eventinfo" 
+            className={({ isActive }) => 
+              `font-label text-sm uppercase tracking-wider transition-colors ${
+                isActive ? 'text-[#00E5FF] border-b-2 border-[#00E5FF] pb-1 font-bold' : 'text-white/70 hover:text-white'
+              }`
+            }
+          >EVENT INFO</NavLink>
+          <NavLink 
+            to="/eventinfo" 
+            className={({ isActive }) => 
+              `font-label text-sm uppercase tracking-wider transition-colors ${
+                isActive ? 'text-[#00E5FF] border-b-2 border-[#00E5FF] pb-1 font-bold' : 'text-white/70 hover:text-white'
+              }`
+            }
+          >EVENT INFO</NavLink>
         </nav>
       </div>
       <div className="flex items-center gap-4">
@@ -66,15 +81,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, onOpenSettings,
             <span className="material-symbols-outlined text-sm">settings</span>
           </button>
         )}
-        <div className="flex items-center gap-2 px-4 py-1 bg-secondary text-on-secondary font-headline font-bold skew-heading">
-          <span 
-            className="material-symbols-outlined text-sm" 
-            style={{ fontVariationSettings: "'FILL' 1" }}
-          >
-            sensors
-          </span>
-          <span className="text-sm uppercase tracking-tighter">LIVE STATUS</span>
-        </div>
+        
       </div>
     </header>
   );
