@@ -7,6 +7,7 @@ import {
   CheckCircle2, 
   AlertTriangle 
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const EventInfo = () => {
   return (
@@ -30,14 +31,10 @@ const EventInfo = () => {
             <FileText className="text-[#38B000]" /> Documents Officiels
           </h2>
           <div className="grid md:grid-cols-2 gap-4">
-            <button className="flex items-center justify-between p-4 bg-[#0B132B] border border-[#00B4D8]/30 hover:border-[#38B000] transition-all group">
+            <Link to="/rules" className="flex items-center justify-between p-4 bg-[#0B132B] border border-[#00B4D8]/30 hover:border-[#38B000] transition-all group">
               <span className="font-anton uppercase tracking-tight">Règlement Général</span>
               <div className="h-2 w-2 bg-[#38B000] rounded-full group-hover:scale-150 transition-transform"></div>
-            </button>
-            <button className="flex items-center justify-between p-4 bg-[#0B132B] border border-[#00B4D8]/30 hover:border-[#38B000] transition-all group">
-              <span className="font-anton uppercase tracking-tight">Annexe Tekken 8 – Saison 2</span>
-              <div className="h-2 w-2 bg-[#38B000] rounded-full group-hover:scale-150 transition-transform"></div>
-            </button>
+            </Link>
           </div>
           <div className="mt-6 flex items-start gap-3 p-4 bg-red-900/20 border border-red-500/50 rounded">
             <AlertTriangle className="text-red-500 shrink-0" />
