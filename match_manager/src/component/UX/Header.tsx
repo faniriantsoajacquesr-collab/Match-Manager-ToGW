@@ -49,13 +49,13 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, onOpenSettings,
             }
           >EVENT INFO</NavLink>
           <NavLink 
-            to="/eventinfo" 
+            to="/rules" 
             className={({ isActive }) => 
               `font-label text-sm uppercase tracking-wider transition-colors ${
                 isActive ? 'text-[#00E5FF] border-b-2 border-[#00E5FF] pb-1 font-bold' : 'text-white/70 hover:text-white'
               }`
             }
-          >EVENT INFO</NavLink>
+          >RULES</NavLink>
         </nav>
       </div>
       <div className="flex items-center gap-4">

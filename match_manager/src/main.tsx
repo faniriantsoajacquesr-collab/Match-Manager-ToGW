@@ -10,6 +10,7 @@ import Ranking from './component/pages/Ranking'
 import Login from './component/pages/Login'
 import Scoreboard from './component/pages/ScoreOverlay'
 import EventInfo from './component/pages/EventInfo'
+import Rules from './component/pages/Rules'
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: "eventinfo",
         element: <EventInfo />,
+      },
+      {
+        path: "rules",
+        element: <Rules/>
       },
     ],
   },
