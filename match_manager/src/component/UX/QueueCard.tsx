@@ -4,11 +4,12 @@ interface QueueCardProps {
   handle: string;
   character: string;
   elo: string;
+  avatarUrl?: string;
   isOnDeck?: boolean;
   matchRound: number;
 }
 
-export const QueueCard: React.FC<QueueCardProps> = ({ handle, character, elo, isOnDeck, matchRound }) => {
+export const QueueCard: React.FC<QueueCardProps> = ({ handle, character, elo, avatarUrl, isOnDeck, matchRound }) => {
   const containerClass = isOnDeck 
     ? "bg-surface-container-high border-secondary" 
     : "bg-surface-container-low border-white/10 opacity-70 hover:opacity-100";
@@ -25,8 +26,19 @@ export const QueueCard: React.FC<QueueCardProps> = ({ handle, character, elo, is
         </div>
       )}
       <div className="flex gap-4 items-center">
-        <div className="w-16 h-16 bg-surface-container-lowest border border-white/10 flex items-center justify-center skew-3">
-          <span className={`material-symbols-outlined text-3xl ${isOnDeck ? 'text-secondary' : 'text-white/40'}`}>person</span>
+        <div className="w-16 h-16 bg-surface-container-lowest border border-white/10 flex items-center justify-center skew-3 overflow-hidden">
+          {avatarUrl ? (
+            <img 
+              src={avatarUrl.startsWith('http') ? avatarUrl : `/assets/characters/${avatarUrl}`} 
+              alt={handle} 
+              className="w-full h-full object-cover" 
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = '/assets/characters/default.webp';
+              }}
+            />
+          ) : (
+            <span className={`material-symbols-outlined text-3xl ${isOnDeck ? 'text-secondary' : 'text-white/40'}`}>person</span>
+          )}
         </div>
         <div>
           <p className="font-headline text-lg font-bold text-white uppercase leading-none">{handle}</p>

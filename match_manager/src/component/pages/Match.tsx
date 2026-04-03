@@ -169,6 +169,7 @@ export default function Match() {
                    <QueueCard 
                     handle={m.p1.name} 
                     character={m.p1.character} 
+                    avatarUrl={m.p1.avatar}
                     elo={m.p1.elo.toString()} 
                     isOnDeck={index < 2} 
                     matchRound={m.matchRound}
@@ -177,6 +178,7 @@ export default function Match() {
                   <QueueCard 
                     handle={m.p2.name} 
                     character={m.p2.character} 
+                    avatarUrl={m.p2.avatar}
                     elo={m.p2.elo.toString()} 
                     isOnDeck={index < 2} 
                     matchRound={m.matchRound}

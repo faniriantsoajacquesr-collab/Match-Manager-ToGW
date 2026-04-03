@@ -90,8 +90,8 @@ const PlayerHeroCard = ({ side, role, player, potentialGain, onWin, playerSide, 
     <div className={`group relative overflow-hidden bg-surface-container h-[400px] ${isLeft ? 'text-left border-l-4 border-primary' : 'text-right border-r-4 border-secondary'} ${isWinner ? 'animate-winner-glow' : ''}`}>
       <img 
         className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700" 
-        src={`/assets/characters/${player.avatar}`} 
-        alt={player.name} 
+        src={player.avatar?.startsWith('http') ? player.avatar : `/assets/characters/${player.avatar}`} 
+        alt={player.name}
         onError={(e) => {
           (e.target as HTMLImageElement).src = '/assets/characters/default.webp';
         }}

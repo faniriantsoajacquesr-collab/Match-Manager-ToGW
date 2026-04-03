@@ -61,7 +61,11 @@ const Classement: React.FC = () => {
               <div className="absolute -top-4 -right-4 text-6xl font-headline font-black text-white/5 italic">02</div>
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 rounded-full border-2 border-[#C0C0C0] p-1 overflow-hidden">
-                  <img alt={players[1].name} className="w-full h-full rounded-full object-cover" src={`/assets/characters/${players[1].avatar_url}`} />
+                  <img 
+                    alt={players[1].name} 
+                    className="w-full h-full rounded-full object-cover" 
+                    src={players[1].avatar_url?.startsWith('http') ? players[1].avatar_url : `/assets/characters/${players[1].avatar_url || 'default.webp'}`} 
+                  />
                 </div>
                 <div>
                   <h4 className="font-headline font-bold text-xl text-white">{players[1].name}</h4>
@@ -93,7 +97,11 @@ const Classement: React.FC = () => {
               <div className="relative z-10">
                 <div className="flex items-center gap-6 mb-8">
                   <div className="w-24 h-24 rounded-full border-4 border-primary p-1 shadow-[0_0_20px_rgba(129,236,255,0.3)] overflow-hidden">
-                    <img alt={players[0].name} className="w-full h-full rounded-full object-cover" src={`/assets/characters/${players[0].avatar_url}`} />
+                    <img 
+                      alt={players[0].name} 
+                      className="w-full h-full rounded-full object-cover" 
+                      src={players[0].avatar_url?.startsWith('http') ? players[0].avatar_url : `/assets/characters/${players[0].avatar_url || 'default.webp'}`} 
+                    />
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-1">
@@ -136,7 +144,11 @@ const Classement: React.FC = () => {
               <div className="absolute -top-4 -right-4 text-6xl font-headline font-black text-white/5 italic">03</div>
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 rounded-full border-2 border-[#CD7F32] p-1 overflow-hidden">
-                  <img alt={players[2].name} className="w-full h-full rounded-full object-cover" src={`/assets/characters/${players[2].avatar_url}`} />
+                  <img 
+                    alt={players[2].name} 
+                    className="w-full h-full rounded-full object-cover" 
+                    src={players[2].avatar_url?.startsWith('http') ? players[2].avatar_url : `/assets/characters/${players[2].avatar_url || 'default.webp'}`} 
+                  />
                 </div>
                 <div>
                   <h4 className="font-headline font-bold text-xl text-white">{players[2].name}</h4>
@@ -197,7 +209,11 @@ const Classement: React.FC = () => {
                     <td className="px-6 py-5">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-surface-container-high rounded-full overflow-hidden border border-white/10">
-                          <img alt={player.name} className="w-full h-full object-cover" src={`/assets/characters/${player.avatar_url}`} />
+                          <img 
+                            alt={player.name} 
+                            className="w-full h-full object-cover" 
+                            src={player.avatar_url?.startsWith('http') ? player.avatar_url : `/assets/characters/${player.avatar_url || 'default.webp'}`} 
+                          />
                         </div>
                         <span className="font-headline font-bold text-white group-hover:text-primary transition-colors">{player.name}</span>
                       </div>
