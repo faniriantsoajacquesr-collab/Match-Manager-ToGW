@@ -48,11 +48,25 @@ export const getLiveQueue = async (matches: any[], participants: any[], supabase
   const p1 = hydratePlayer(currentMatch?.player1_id);
   const p2 = hydratePlayer(currentMatch?.player2_id);
 
+  // Détection des phases finales
+  const winnersRounds = matches.filter(m => m.round > 0).map(m => m.round);
+  const losersRounds = matches.filter(m => m.round < 0).map(m => m.round);
+  
+  const maxWinnersRound = winnersRounds.length > 0 ? Math.max(...winnersRounds) : 0;
+  const minLosersRound = losersRounds.length > 0 ? Math.min(...losersRounds) : 0; // Le round le plus "négatif" est la finale perdant
+  
+  const incompleteMatches = matches.filter(m => m.state !== 'complete');
+
   return {
     live: currentMatch ? {
       id: currentMatch.id, 
       p1,
       p2,
+      matchRound: currentMatch.round,
+      isGrandFinal: incompleteMatches.length === 1,
+      isWinnersFinal: currentMatch.round === maxWinnersRound && currentMatch.round > 0,
+      isLosersFinal: currentMatch.round === minLosersRound && currentMatch.round < 0,
+      isWinnersSemi: currentMatch.round === maxWinnersRound - 1 && currentMatch.round > 0,
       // Prédiction de hype
       p1Gain: predictMatchGain(p1.elo, p2.elo),
       p2Gain: predictMatchGain(p2.elo, p1.elo),

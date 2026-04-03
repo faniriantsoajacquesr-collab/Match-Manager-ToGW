@@ -17,6 +17,7 @@ export default function Match() {
     const [error, setError] = useState<string | null>(null);
     const [isAdmin, setIsAdmin] = useState(false);
     const [settings, setSettings] = useState<{slug: string, api: string} | null>(null);
+    const [champion, setChampion] = useState<any>(null);
     const [channel, setChannel] = useState<RealtimeChannel | null>(null);
 
     const refreshData = async () => {
@@ -35,6 +36,18 @@ export default function Match() {
             console.error("Match Manager Error:", err);
             setError(err.message);
         }
+    };
+
+    const getPhaseLabel = (match: any) => {
+        if (match.isGrandFinal) return "GRAND FINAL";
+        if (match.isWinnersFinal) return "WINNER'S FINAL";
+        if (match.isLosersFinal) return "LOSER'S FINAL";
+        if (match.isWinnersSemi) return "WINNER'S SEMI-FINAL";
+        
+        if (match.matchRound === 0) return "Match d'Exhibition";
+        const absRound = Math.abs(match.matchRound);
+        const bracket = match.matchRound > 0 ? "WINNER'S BRACKET" : "LOSER'S BRACKET";
+        return `${bracket} • ROUND ${absRound}`;
     };
 
     const handleWinner = async (side: 'p1' | 'p2') => {
@@ -101,6 +114,11 @@ export default function Match() {
                 throw new Error(`Joueur introuvable en base : ${!winUpdate.data?.length ? winner.name : loser.name}`);
             }
 
+            // Vérification si c'était le dernier match (Grand Finale)
+            if (match.isGrandFinal) {
+                setChampion(winner);
+            }
+
             // 4. Refresh immédiat
             setTimeout(() => {
                 refreshData();
@@ -144,9 +162,57 @@ export default function Match() {
     if (!tournamentData) return <div className="text-white p-20">Loading Tournament...</div>;
 
     return (
-<main className="pt-16">
+      <main className="pt-16">
+        {/* Overlay de Célébration du Champion */}
+        {champion && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-xl p-4 animate-in fade-in duration-700">
+            <div className="max-w-2xl w-full text-center space-y-8 animate-in zoom-in-95 duration-500">
+              <div className="relative inline-block">
+                <div className="absolute inset-0 bg-primary blur-[100px] opacity-20 animate-pulse" />
+                <h1 className="relative text-5xl md:text-7xl font-headline font-black text-white italic skew-heading leading-none">
+                  TOURNAMENT<br/>
+                  <span className="text-primary">CHAMPION</span>
+                </h1>
+              </div>
+
+              <div className="relative w-64 h-64 md:w-80 md:h-80 mx-auto mt-12">
+                <div className="absolute inset-0 rounded-full border-4 border-primary animate-ping opacity-20" />
+                <img 
+                  src={champion.avatar?.startsWith('http') ? champion.avatar : `/assets/characters/${champion.avatar || 'default.webp'}`}
+                  alt={champion.name}
+                  className="w-full h-full rounded-full object-cover border-8 border-primary relative z-10 shadow-[0_0_50px_rgba(129,236,255,0.4)]"
+                />
+                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 z-20 bg-secondary px-8 py-3 skew-x-[-15deg] shadow-2xl">
+                  <span className="text-2xl md:text-3xl font-headline font-black text-on-secondary italic block skew-x-[15deg]">WINNER</span>
+                </div>
+              </div>
+
+              <h2 className="text-5xl md:text-6xl font-headline font-black text-white uppercase tracking-tighter mt-12">
+                {champion.name}
+              </h2>
+
+              <button 
+                onClick={() => setChampion(null)}
+                className="px-12 py-4 bg-primary text-on-primary font-headline font-bold text-xl uppercase italic skew-heading hover:scale-105 transition-transform"
+              >
+                CONTINUE
+              </button>
+            </div>
+          </div>
+        )}
+
         <div className="p-8 max-w-7xl mx-auto space-y-12">
-          {tournamentData.live && <MatchHero match={tournamentData.live} onWinner={handleWinner} winningSide={winningSide} isAdmin={isAdmin} />}
+          {tournamentData.live && (
+            <div className="space-y-4">
+              <div className="text-center">
+                <h2 className="text-primary font-headline text-3xl md:text-4xl font-black italic skew-heading uppercase tracking-tighter">
+                  {getPhaseLabel(tournamentData.live)}
+                </h2>
+                <div className="h-1 w-24 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mt-2" />
+              </div>
+              <MatchHero match={tournamentData.live} onWinner={handleWinner} winningSide={winningSide} isAdmin={isAdmin} />
+            </div>
+          )}
           
           <section className="space-y-6">
             <div className="flex items-end justify-between border-b border-white/10 pb-4">

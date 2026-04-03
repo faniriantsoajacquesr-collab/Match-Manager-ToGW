@@ -35,11 +35,14 @@ const LargeEloScoreboard = () => {
 
   if (!match) return null; // L'overlay disparaît s'il n'y a pas de match en cours
 
-  const matchPhaseLabel = match.matchRound > 0 
-    ? `WINNER'S ROUND ${match.matchRound}` 
-    : match.matchRound < 0 
-      ? `LOSER'S ROUND ${Math.abs(match.matchRound)}` 
-      : "RANKED MATCH";
+  const matchPhaseLabel = match.isGrandFinal ? "GRAND FINAL" :
+    match.isWinnersFinal ? "WINNER'S FINAL" :
+    match.isLosersFinal ? "LOSER'S FINAL" :
+    match.matchRound > 0 
+      ? `WINNER'S ROUND ${match.matchRound}` 
+      : match.matchRound < 0 
+        ? `LOSER'S ROUND ${Math.abs(match.matchRound)}` 
+        : "RANKED MATCH";
 
   return (
     // Conteneur plein écran, fond transparent, fixé en haut
